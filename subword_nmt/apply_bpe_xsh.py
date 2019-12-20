@@ -87,7 +87,7 @@ class BPE(object):
     def segment(self, sentence, dropout=0):
         """segment single sentence (whitespace-tokenized string) with BPE encoding"""
         if sentence.startswith('[PAD]') or sentence.startswith('[unused') or sentence.startswith('##'):
-            return sentence
+            return sentence.strip('\r\n ')
         segments = self.segment_tokens(sentence.strip('\r\n ').split(' '), dropout)
         return ' '.join(segments)
 
