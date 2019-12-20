@@ -62,6 +62,11 @@ def create_parser(subparsers=None):
         '--verbose', '-v', action="store_true",
         help="verbose mode.")
 
+    #---------------------------------------------
+    parser.add_argument(
+        '--lower_case',type=bool,default=True,
+    )
+
     return parser
 
 def get_vocabulary(fobj, is_dict=False):
@@ -200,7 +205,7 @@ def prune_stats(stats, big_stats, threshold):
                 big_stats[item] = freq
 
 
-def learn_bpe(infile, outfile, num_symbols, min_frequency=2, verbose=False, is_dict=False, total_symbols=False):
+def learn_bpe(infile, outfile, num_symbols, lower, min_frequency=2, verbose=False, is_dict=False, total_symbols=False):
     """Learn num_symbols BPE operations from vocabulary, and write to outfile.
     """
 
@@ -209,6 +214,8 @@ def learn_bpe(infile, outfile, num_symbols, min_frequency=2, verbose=False, is_d
     outfile.write('#version: 0.2\n')
 
     vocab = get_vocabulary(infile, is_dict)
+    if lower:
+        vocab = dict([(x.lower(),y) for (x,y) in vocab.items()])
     vocab = dict([(tuple(x[:-1])+(x[-1]+'</w>',) ,y) for (x,y) in vocab.items()])
     sorted_vocab = sorted(vocab.items(), key=lambda x: x[1], reverse=True)
 
@@ -286,4 +293,4 @@ if __name__ == '__main__':
     if args.output.name != '<stdout>':
         args.output = codecs.open(args.output.name, 'w', encoding='utf-8')
 
-    learn_bpe(args.input, args.output, args.symbols, args.min_frequency, args.verbose, is_dict=args.dict_input, total_symbols=args.total_symbols)
+    learn_bpe(args.input, args.output, args.symbols, args.lower_case, args.min_frequency, args.verbose, is_dict=args.dict_input, total_symbols=args.total_symbols,)
