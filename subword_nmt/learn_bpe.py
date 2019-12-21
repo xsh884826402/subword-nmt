@@ -64,7 +64,7 @@ def create_parser(subparsers=None):
 
     #---------------------------------------------
     parser.add_argument(
-        '--lower_case',type=bool,default=True,
+        '--lower_case',type=bool,default=False,
     )
 
     return parser
@@ -210,7 +210,7 @@ def learn_bpe(infile, outfile, num_symbols, lower, min_frequency=2, verbose=Fals
     """
 
     # version 0.2 changes the handling of the end-of-word token ('</w>');
-    # version numbering allows bckward compatibility
+    # version numbering allows bckward compatibility-i
     outfile.write('#version: 0.2\n')
 
     vocab = get_vocabulary(infile, is_dict)
